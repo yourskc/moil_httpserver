@@ -1,4 +1,4 @@
-# MOIL Httpserver
+# MOIL Http Server
 
 A Node.js web app used for generating compute-intensive matrices for MOIL anypoint operations. 
 
