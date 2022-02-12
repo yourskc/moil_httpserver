@@ -1,15 +1,6 @@
 # MOIL Http Server
 
-A Node.js web app used for generating compute-intensive matrices for MOIL anypoint operations. 
-
-development environment for myself:
-
-skc-win10
-
-PowerShell - 
-
-cd C:\Users\skc\source\repos\moil_httpserver
-
+A Node.js web app used to generate MOIL anypoint matrices. 
 
 ## 1.   Download 
 
@@ -19,7 +10,6 @@ cd C:\Users\skc\source\repos\moil_httpserver
 
    - *cd moil_httpserver*
 
-
 ## 2.   Run
 
    - *npm install*
@@ -27,9 +17,7 @@ cd C:\Users\skc\source\repos\moil_httpserver
    - *node index.js*
 
 
-## 3.   Client example
 
-	To be continued
 	
 	
 	
