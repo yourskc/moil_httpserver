@@ -1,0 +1,3 @@
+[submodule "mainmoil_cuda_cli"]
+	path = mainmoil_cuda_cli
+	url = https://github.com/yourskc/mainmoil_cuda_cli.git
