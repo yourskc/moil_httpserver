@@ -1,5 +1,7 @@
-// example #1: localhost:1111/?name=rpi_220&camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=1&alpha=0&beta=0&zoom=4
-// example #2: localhost:1111/x.map?name=rpi_220&camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=1&alpha=0&beta=0&zoom=4
+// example #1: localhost:1111/x.map?camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=1&alpha=0&beta=0&zoom=4
+// example #2: localhost:1111/y.map?camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=1&alpha=0&beta=0&zoom=4
+// example #3: localhost:1111/anypoint.jpg?camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=1&alpha=0&beta=0&zoom=4
+// example #4: localhost:1111/panorama.jpg?camerasensorwidth=1.4&camerasensorheight=1.4&icx=1320.0&icy=1017.0&ratio=1.048&imagewidth=2592&imageheight=1944&calibrationratio=3.4&para0=0&para1=0&para2=0&para3=10.11&para4=-85.241&para5=282.21&mode=2&w_dest=2592&h_dest=1944
 var server,
 ip = "127.0.0.1",
 port = 1111,
@@ -34,21 +36,20 @@ host: "localhost",
 user: "moil",
 password: "********",
 database: "moil"
-});	
+});
 
 
 async function exec_cli(params_str) {
 // const { stdout, stderr } = await exec('./mainmoil rpi_220 1.4 1.4 1320.0 1017.0 1.048 2592 1944 3.4 0 0 0 10.11 -85.241 282.21 1 0 0 4');
 const { stdout, stderr } = await exec('./mainmoil ' + params_str);
 // console.log('stdout:', stdout);
-// console.error('stderr:', stderr);
-}	
+// console.error('stderr:', stderr);'Error'
+}
 
 
 
 server = http.createServer(function(req, res) {
 path0 = url.parse(req.url,true);
-const name = path0.query['name'];
 const camerasensorwidth = path0.query['camerasensorwidth'];
 const camerasensorheight = path0.query['camerasensorheight'];
 const icx = path0.query['icx'];
@@ -68,11 +69,22 @@ const alpha = path0.query['alpha'];
 const beta = path0.query['beta'];
 const zoom = path0.query['zoom'];
 
-const params =  name + ' ' + camerasensorwidth + ' ' + camerasensorheight + ' ' +
+const w_dest = path0.query['w_dest'];
+const h_dest = path0.query['h_dest'];
+
+const params = camerasensorwidth + ' ' + camerasensorheight + ' ' +
 icx + ' ' + icy + ' ' +
 ratio + ' ' + imagewidth + ' ' + imageheight + ' ' + calibrationratio + ' ' +
 para0 + ' ' + para1 + ' ' + para2 + ' ' + para3 + ' ' + para4 + ' ' + para5 + ' ' +
 mode + ' ' + alpha + ' ' + beta + ' ' + zoom;
+
+const params2 = camerasensorwidth + ' ' + camerasensorheight + ' ' +
+icx + ' ' + icy + ' ' +
+ratio + ' ' + imagewidth + ' ' + imageheight + ' ' + calibrationratio + ' ' +
+para0 + ' ' + para1 + ' ' + para2 + ' ' + para3 + ' ' + para4 + ' ' + para5+
+mode + ' ' + w_dest + ' ' + h_dest;
+
+
 
 switch (path0.pathname) {
 case "/":
@@ -83,16 +95,16 @@ break;
 
 case "/mysql":
 
-var retStr = "" ;	
+var retStr = "" ;
 con.connect(function(err) {
 if (err) throw err;
 console.log("Connected!");
 var sql = "select * from users";
 con.query(sql, function (err, result, fields) {
 if (err) throw err;
-console.log(result);  	
+console.log(result);
 });
-});	
+});
 
 res.end('this is mysql page.\n');
 break;
@@ -100,7 +112,7 @@ break;
 
 case "/x.map":
 
-exec_cli(params);
+exec_cli( "map" + ' ' + params);
 // var s = fs.createReadStream(folderPath + "/" + path0.pathname);
 var s = fs.createReadStream( "./x.map" );
 s.on('open', function () {
@@ -113,9 +125,9 @@ s.on('error', function () {
 res.setHeader('Content-Type', 'text/plain');
 res.statusCode = 404;
 res.end('Error');
-});	
+});
 
-break; 
+break;
 
 case "/y.map":
 
@@ -132,17 +144,69 @@ s.on('error', function () {
 res.setHeader('Content-Type', 'text/plain');
 res.statusCode = 404;
 res.end('Error');
-});	
+});
 
-break; 
-default:  
+break;
+case "/anypoint.jpg":
+
+//exec_cli( "anypoint" + ' ' + params);
+//res.setHeader('Content-Type', 'text/plain');
+//res.statusCode = 404;
+//res.end("anypoint" + ' ' + params);
+
+exec_cli( "anypoint" + ' ' + params);
+
+var s = fs.createReadStream( "./anypoint.jpg" );
+s.on('open', function () {
+res.setHeader('Content-Type', 'application/moil');
+// res.setHeader('Content-disposition', 'attachment; filename='+query.file);
+res.statusCode = 200;
+s.pipe(res);
+});
+s.on('error', function () {
+res.setHeader('Content-Type', 'text/plain');
+res.statusCode = 404;
+res.end('Error');
+});
+
+break;
+case "/panorama.jpg":
+/*
+exec_cli( "panorama" + ' ' + params2);
+res.setHeader('Content-Type', 'text/plain');
+res.statusCode = 404;
+res.end("panorama" + ' ' + params);
+*/
+
+exec_cli( "panorama" + ' ' + params2);
+
+var s = fs.createReadStream( "./panorama.jpg" );
+s.on('open', function () {
+res.setHeader('Content-Type', 'application/moil');
+// res.setHeader('Content-disposition', 'attachment; filename='+query.file);
+res.statusCode = 200;
+s.pipe(res);
+});
+s.on('error', function () {
+res.setHeader('Content-Type', 'text/plain');
+res.statusCode = 404;
+res.end('Error');
+});
+
 
 break;
 
 
 
 
-}	
+default:
+
+break;
+
+
+
+
+}
 
 
 
