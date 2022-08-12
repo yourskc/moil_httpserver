@@ -133,14 +133,14 @@ case "/y.map":
 
 // exec_cli(); // suppose x.map would be called first
 // var s = fs.createReadStream(folderPath + "/" + path0.pathname);
-var s = fs.createReadStream( "./y.map" );
-s.on('open', function () {
+var s2 = fs.createReadStream( "./y.map" );
+s2.on('open', function () {
 res.setHeader('Content-Type', 'application/moil');
 // res.setHeader('Content-disposition', 'attachment; filename='+query.file);
 res.statusCode = 200;
-s.pipe(res);
+s2.pipe(res);
 });
-s.on('error', function () {
+s2.on('error', function () {
 res.setHeader('Content-Type', 'text/plain');
 res.statusCode = 404;
 res.end('Error');
